@@ -71,6 +71,21 @@ def exploit_keymaps(src):
 
     return results
 
+def generate_splited(array):
+    result = []
+    open_brc_count = 0
+
+    tmp_s = ""
+    for s in array:
+        open_brc_count += s.count('(')
+        open_brc_count -= s.count(')')
+        tmp_s += "," + s if tmp_s != "" else  s
+
+        if open_brc_count == 0:
+            result.append(tmp_s)
+            tmp_s = ""
+
+    return result
 
 def cransing(array, d):
     """
@@ -115,7 +130,10 @@ def main():
         dictionary = cransing(i.split(','), dictionary)
         # print(i.split(','))
 
-    print(dictionary)
+    for key, value in dictionary.items():
+        dictionary[key] = generate_splited(value)
+
+    assert len(dictionary['BASE'])==76, "Ergodox has 76 keys but yours : {0}".format(len(dictionary['BASE']))
 
     with open('keymaps.json', 'w') as out_fp:
         json.dump(dictionary, out_fp, indent=True)
