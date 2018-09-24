@@ -3,6 +3,7 @@
 PATH = 'default/keymap.c'
 import re
 import enum
+import json
 
 class State(enum.Enum):
     COMMENT_1LINE = 0
@@ -70,6 +71,32 @@ def exploit_keymaps(src):
 
     return results
 
+
+def cransing(array, d):
+    """
+    splitしたものからdictionaryを作る
+    :param array:
+    :return:
+    """
+    r = d
+
+    if len(array) == 0:
+        return r
+
+    # key の抽出
+    pattern = r"\[([^\]]+)\]=KEYMAP\((.+)"
+
+    mr = re.search(pattern, array[0])
+
+    if mr:
+        key = mr.group(1)
+        first_value = mr.group(2)
+
+        r[key] = [first_value]
+        r[key].extend(array[1:])
+
+    return r
+
 def main():
     print("convert keymap to json...")
 
@@ -83,9 +110,17 @@ def main():
     src = remove_comments(src)
 
     r = exploit_keymaps(src)
-
+    dictionary = {}
     for i in r:
-        print(i.split(','))
+        dictionary = cransing(i.split(','), dictionary)
+        # print(i.split(','))
+
+    print(dictionary)
+
+    with open('keymaps.json', 'w') as out_fp:
+        json.dump(dictionary, out_fp, indent=True)
+
+
 
 if __name__ == '__main__':
     main()
