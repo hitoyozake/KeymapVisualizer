@@ -12,6 +12,7 @@
 <body>
    <script src="bootstrap-4.1.3-dist/js/jquery-3.3.1.min.js"></script>
         <script src="bootstrap-4.1.3-dist/js/bootstrap.bundle.js"></script>
+
  <table>
         <tr>
 
@@ -145,18 +146,38 @@
                             <td><div class="key">__67__</div></td>
                             <td><div class="key">__68__</div></td>
                             <td><div class="key">__69__</div></td>
+                                                        <td></td>
+
                         </tr>
                         <tr>
                             <td><div class="key">__70__</div></td>
                             <td><div class="key">__71__</div></td>
+                                                        <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+
                         </tr>
                         <tr>
                             <td><div class="key">__72__</div></td>
+                                                        <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+
                         </tr>
                         <tr>
                             <td><div class="key">__73__</div></td>
                             <td><div class="key">__74__</div></td>
                             <td><div class="key">__75__</div></td>
+                                                        <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+
                         </tr>
                     </table>
 </div>
@@ -164,16 +185,40 @@
             </td>
         </tr>
     </table>
-   <script type="text/javascript">
+<script type="text/javascript">
+    function onclick(name){
+    $(function() {
+    $.getJSON("keymaps.json", function(data) {
        var targetNodes = document.getElementsByClassName('key');
-       for(var i =0;i<targetNodes.length; ++i){
-           alert(targetNodes[i].innerHTML);
-       }
-/*（2）新たなDIVタグを作成*/
+       for(var i =0;i<targetNodes.length; ++i) {
+           targetNodes[i].innerHTML = $(data[name])[i];//JSON_DATA["BASE"][i];
 
+       }
+    });
+});
+    }
+        onclick("BASE");
 
    </script>
-    {%items%}
+   <br><br>
+    <div ID="buttons"></div>
+   <script type="text/javascript">
+       var onclick_ = onclick;
+       function genbutton(){
+    $(function() {
+        var targetNode = document.getElementById("buttons");
+        var tags = "";
+    $.getJSON("keymaps.json", function(data) {
+       for(var key in data) {
+           tags += "<button type=\"button\" class=\"btn btn-primary btn-lg\" onclick=\'onclick_(\""+key+"\");\');\'>" + key + "</button> ";
+       }
+        targetNode.innerHTML = tags;
+       // onclick("BASE");
+    });
+});
+       }
+       genbutton();
+   </script>
 </body>
 
 </html>
